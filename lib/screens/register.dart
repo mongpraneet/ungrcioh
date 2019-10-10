@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ungrcioh/screens/my_style.dart';
 
@@ -74,8 +75,53 @@ class _RegisterState extends State<Register> {
         formKey.currentState.save();
         print(
             'name= $nameString ,email =$emailString , password=$passwordString');
+        registerThread();
       },
     );
+  }
+
+  Future<void> registerThread() async {
+    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+    await firebaseAuth
+        .createUserWithEmailAndPassword(
+            email: emailString, password: passwordString)
+        .then((response) {
+      print('Register Sucess');
+      setUpDisplayName();
+    }).catchError((response) {
+      String titlte = response.code;
+      String message = response.message;
+      print('title =$titlte, message=$message');
+      myAlert(titlte, message);
+    });
+  }
+
+  Future<void> setUpDisplayName() async {
+    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+    await firebaseAuth.currentUser().then((response) {
+      UserUpdateInfo userUpdateInfo = UserUpdateInfo();
+      userUpdateInfo.displayName = nameString;
+      response.updateProfile(userUpdateInfo);
+      
+    });
+  }
+
+  void myAlert(String title, String message) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(title),
+            content: Text(message),
+            actions: <Widget>[
+              FlatButton(
+                  child: Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  })
+            ],
+          );
+        });
   }
 
   @override
