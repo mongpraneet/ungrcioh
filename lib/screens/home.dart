@@ -13,6 +13,8 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
 //Explicit ctrl+/
+  final formKey = GlobalKey<FormState>();
+  String emailString, passwordString;
 
 //Method
   @override
@@ -26,9 +28,11 @@ class _HomeState extends State<Home> {
     FirebaseUser firebaseUser = await firebaseAuth.currentUser();
 
     if (firebaseUser != null) {
-      MaterialPageRoute materialPageRoute = MaterialPageRoute(builder: (BuildContext context) => MyService());
+      MaterialPageRoute materialPageRoute =
+          MaterialPageRoute(builder: (BuildContext context) => MyService());
 
-      Navigator.of(context).pushAndRemoveUntil(materialPageRoute, (Route<dynamic> route)=> false);
+      Navigator.of(context).pushAndRemoveUntil(
+          materialPageRoute, (Route<dynamic> route) => false);
     }
   }
 
@@ -41,8 +45,66 @@ class _HomeState extends State<Home> {
           color: Colors.white,
         ),
       ),
-      onPressed: () {},
+      onPressed: () {
+        print('email = $emailString, password=$passwordString');
+        formKey.currentState.save();
+        checkAuthen();
+      },
     );
+  }
+
+  Future<void> checkAuthen() async {
+    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+
+    await firebaseAuth
+        .signInWithEmailAndPassword(
+            email: emailString, password: passwordString)
+        .then((response) {
+      MaterialPageRoute materialPageRoute =
+          MaterialPageRoute(builder: (BuildContext context) => MyService());
+
+      Navigator.of(context).pushAndRemoveUntil(
+          materialPageRoute, (Route<dynamic> route) => false);
+    }).catchError((respose) {
+      String title = respose.code;
+      String message = respose.message;
+      myAlert(title, message);
+    });
+  }
+
+  Widget showTitle(String title) {
+    return ListTile(
+      leading: Icon(
+        Icons.add_alert,
+        size: 48.0,
+        color: Colors.red,
+      ),
+      title: Text(
+        title,
+        style: TextStyle(
+            color: Colors.red,
+            fontSize: MyStyle().h2,
+            fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+
+  void myAlert(String title, String message) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: showTitle(title),
+            content: Text(message),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Ok'),onPressed: (){
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        });
   }
 
   Widget singUpButton() {
@@ -87,6 +149,9 @@ class _HomeState extends State<Home> {
             color: MyStyle().textColor,
           ),
         ),
+        onSaved: (values) {
+          emailString = values.trim();
+        },
       ),
       width: 250.0,
     );
@@ -106,6 +171,9 @@ class _HomeState extends State<Home> {
             color: MyStyle().textColor,
           ),
         ),
+        onSaved: (values) {
+          passwordString = values.trim();
+        },
       ),
       width: 250.0,
     );
@@ -144,18 +212,21 @@ class _HomeState extends State<Home> {
             ),
           ),
           child: Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                showLogo(),
-                showAppName(),
-                userText(),
-                passwordText(),
-                SizedBox(
-                  height: 10.0,
-                ),
-                showButton(),
-              ],
+            child: Form(
+              key: formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  showLogo(),
+                  showAppName(),
+                  userText(),
+                  passwordText(),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  showButton(),
+                ],
+              ),
             ),
           ),
         ),
