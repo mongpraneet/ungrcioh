@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "113558924208",
+    "firebase_url": "https://ungrcioh.firebaseio.com",
+    "project_id": "ungrcioh",
+    "storage_bucket": "ungrcioh.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:113558924208:android:e2f21260e1ff87baa64475",
+        "android_client_info": {
+          "package_name": "com.rcithailand.ungrcioh"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "113558924208-7lms92e5v9ceecggjireaeq5rvu95cnh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAueoYiJrQRg9EbQvdel_uBqCVhZsurXn4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "113558924208-7lms92e5v9ceecggjireaeq5rvu95cnh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
