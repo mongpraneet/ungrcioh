@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ungrcioh/screens/home.dart';
@@ -57,6 +55,9 @@ class _MyServiceState extends State<MyService> {
       ),
       title: Text('List All Product'),
       subtitle: Text('Show All Product in my Fortory'),
+      onTap: () {
+        Navigator.of(context).pop();
+      },
     );
   }
 
@@ -69,6 +70,9 @@ class _MyServiceState extends State<MyService> {
       ),
       title: Text('List Add Product'),
       subtitle: Text('Show Add Product in my Fortory'),
+      onTap: () {
+        Navigator.of(context).pop();
+      },
     );
   }
 
