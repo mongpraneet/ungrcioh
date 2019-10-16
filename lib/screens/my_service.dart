@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:ungrcioh/screens/add_product.dart';
 import 'package:ungrcioh/screens/home.dart';
+import 'package:ungrcioh/screens/list_all_product.dart';
 import 'package:ungrcioh/screens/my_style.dart';
 
 class MyService extends StatefulWidget {
@@ -10,8 +12,11 @@ class MyService extends StatefulWidget {
 
 class _MyServiceState extends State<MyService> {
 // Explicit
-
   String loginString = '';
+  Widget currentWidget = ListAllProduct();
+  
+
+
 
 // Method
   @override
@@ -56,6 +61,9 @@ class _MyServiceState extends State<MyService> {
       title: Text('List All Product'),
       subtitle: Text('Show All Product in my Fortory'),
       onTap: () {
+        setState(() {
+          currentWidget = ListAllProduct();
+        });
         Navigator.of(context).pop();
       },
     );
@@ -71,6 +79,9 @@ class _MyServiceState extends State<MyService> {
       title: Text('List Add Product'),
       subtitle: Text('Show Add Product in my Fortory'),
       onTap: () {
+        setState(() {
+          currentWidget = AddProduct();
+        });
         Navigator.of(context).pop();
       },
     );
@@ -149,7 +160,7 @@ class _MyServiceState extends State<MyService> {
         title: Text('My Service'),
         actions: <Widget>[signOutButton()],
       ),
-      body: Text('body'),
+      body: currentWidget,
       drawer: myDrawer(),
     );
   }
