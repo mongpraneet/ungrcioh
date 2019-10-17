@@ -14,9 +14,6 @@ class _MyServiceState extends State<MyService> {
 // Explicit
   String loginString = '';
   Widget currentWidget = ListAllProduct();
-  
-
-
 
 // Method
   @override
@@ -156,6 +153,7 @@ class _MyServiceState extends State<MyService> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         title: Text('My Service'),
         actions: <Widget>[signOutButton()],
