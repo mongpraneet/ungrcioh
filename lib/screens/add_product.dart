@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:ungrcioh/screens/my_style.dart';
 
 class AddProduct extends StatefulWidget {
@@ -8,6 +11,9 @@ class AddProduct extends StatefulWidget {
 
 class _AddProductState extends State<AddProduct> {
 // Explicit
+  String name, detail;
+  final formKey = GlobalKey<FormState>();
+  File file;
 
 // Methond
   Widget cameraButton() {
@@ -17,8 +23,22 @@ class _AddProductState extends State<AddProduct> {
         size: 48.0,
         color: Colors.purple,
       ),
-      onPressed: () {},
+      onPressed: () {
+        cameraThread();
+      },
     );
+  }
+
+  Future<void> cameraThread() async {
+    var objFile = await ImagePicker.pickImage(
+      maxWidth: 800.0,
+      maxHeight: 480.0,
+      source: ImageSource.camera,
+    );
+
+    setState(() {
+      file = objFile;
+    });
   }
 
   Widget galleryButton() {
@@ -53,7 +73,8 @@ class _AddProductState extends State<AddProduct> {
   Widget picture() {
     return Container(
       height: MediaQuery.of(context).size.height * 0.4,
-      child: Image.asset('images/picture.png'),
+      child:
+          file == null ? Image.asset('images/picture.png') : Image.file(file),
     );
   }
 
@@ -65,6 +86,9 @@ class _AddProductState extends State<AddProduct> {
           width: MediaQuery.of(context).size.width * 0.6,
           child: TextFormField(
             decoration: InputDecoration(labelText: 'Name :'),
+            onSaved: (String value) {
+              name = value.trim();
+            },
           ),
         ),
       ],
@@ -81,6 +105,9 @@ class _AddProductState extends State<AddProduct> {
             maxLines: 4,
             keyboardType: TextInputType.multiline,
             decoration: InputDecoration(labelText: 'Detail :'),
+            onSaved: (String value) {
+              detail = value.trim();
+            },
           ),
         ),
       ],
@@ -88,13 +115,16 @@ class _AddProductState extends State<AddProduct> {
   }
 
   Widget myContent() {
-    return Column(
-      children: <Widget>[
-        nameText(),
-        detailText(),
-        picture(),
-        pictureButton(),
-      ],
+    return Form(
+      key: formKey,
+      child: Column(
+        children: <Widget>[
+          nameText(),
+          detailText(),
+          picture(),
+          pictureButton(),
+        ],
+      ),
     );
   }
 
@@ -116,11 +146,40 @@ class _AddProductState extends State<AddProduct> {
                 color: Colors.white,
               ),
             ),
-            onPressed: () {},
+            onPressed: () {
+              formKey.currentState.save();
+              checkValue();
+            },
           ),
         ),
       ],
     );
+  }
+
+  void checkValue() {
+    if ((name.isEmpty) || (detail.isEmpty)) {
+      // Have space
+      myAlert('Have Space', 'Plese Fill All Blank');
+    }
+  }
+
+  void myAlert(String title, String message) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(title),
+            content: Text(message),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Ok'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        });
   }
 
   @override
